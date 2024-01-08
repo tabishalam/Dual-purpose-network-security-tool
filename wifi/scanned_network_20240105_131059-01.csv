@@ -1,0 +1,12 @@
+
+BSSID, First time seen, Last time seen, channel, Speed, Privacy, Cipher, Authentication, Power, # beacons, # IV, LAN IP, ID-length, ESSID, Key
+F8:E7:1E:13:F4:38, 2024-01-05 13:11:05, 2024-01-05 13:11:15,  2, 270, WPA2, CCMP, MGT, -74,        4,        0,   0.  0.  0.  0,  23, An0kit-ss3ccA-Eth3r_CP3, 
+F8:E7:1E:19:C0:28, 2024-01-05 13:11:07, 2024-01-05 13:11:18,  4, 270, WPA2, CCMP, MGT, -70,        5,        0,   0.  0.  0.  0,  23, An0kit-ss3ccA-Eth3r_CP3, 
+F8:E7:1E:59:C0:28, 2024-01-05 13:11:07, 2024-01-05 13:11:07,  4, 270, WPA2, CCMP, MGT, -70,        1,        0,   0.  0.  0.  0,   0, , 
+76:49:C4:76:C5:3E, 2024-01-05 13:11:13, 2024-01-05 13:11:13, 10,  -1, , ,   ,  -1,        0,        0,   0.  0.  0.  0,   0, , 
+F8:E7:1E:59:C0:2C, 2024-01-05 13:11:14, 2024-01-05 13:11:15, 149, 360, WPA2, CCMP, PSK, -78,        2,        0,   0.  0.  0.  0,   0, , 
+58:C1:7A:0E:4A:81, 2024-01-05 13:11:17, 2024-01-05 13:11:17, 11, 130, WPA2, CCMP, MGT, -81,        1,        0,   0.  0.  0.  0,  23, An0kit-ss3ccA-Eth3r_CP3, 
+
+Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs
+84:3E:1D:24:49:68, 2024-01-05 13:11:09, 2024-01-05 13:11:10, -67,        4, (not associated) ,
+
