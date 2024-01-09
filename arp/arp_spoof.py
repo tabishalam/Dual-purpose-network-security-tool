@@ -1,7 +1,8 @@
 # 192.168.170.131
-import scapy.all as scapy
 import time
 import subprocess
+import scapy.all as scapy
+
 
 target_ip = ""
 router_ip = ""

@@ -1,9 +1,16 @@
-import colors
 import psutil
 import subprocess
 
+import style.colors as colors
+import utils.terminal as terminal
 
-# Gets the list of interfaces with full details
+
+# Global Variable
+SELECTED_INTERFACE = ""
+
+
+
+# Return list of interfaces with full details
 def get_interfaces():
     try:
         interfaces_list_full = psutil.net_if_addrs()
@@ -12,7 +19,7 @@ def get_interfaces():
         print(f"{colors.RED}Error: {e}{colors.RESET}")
 
 
-# Gets interfaces name
+# Return interfaces name
 def get_interfaces_name():
     try:
         return list(psutil.net_if_addrs().keys())
@@ -31,21 +38,45 @@ def print_interfaces(interfaces):
 
 # Change interface mode to monitor mode...
 def to_monitor_mode(interface):
-    command = "sudo airmon-ng start"
     try:
-        subprocess.run([command, interface])
+        subprocess.run(["sudo", "airmon-ng", "start", interface])
     except subprocess.CalledProcessError:
         print(f"{colors.RED}Failed to put interface in monitor mode!!!{colors.RESET}")
     else:
-        print(f"{colors.GREEN}Monitor mode enabled for selected interface...{colors.RESET}")
+        print(f"{colors.DEFAULT_COLOR}Monitor mode enabled for selected interface...{colors.RESET}")
 
 
 # Reverse interface mode to monitor mode
 def reverse_monitor_mode(interface):
-    command = "sudo airmon-ng stop"
     try:
-        subprocess.run([command, interface])
+        subprocess.run("sudo airmon-ng stop" + interface)
     except subprocess.CalledProcessError:
         print(f"{colors.RED}Failed to remove interface from monitor mode{colors.RESET}")
     else:
         print(f"{colors.GREEN}Monitor mode disabled!!!...{colors.RESET}")
+
+
+def select_interface():
+    # ******************* Variables *******************
+    interfaces_list = None
+    interface_id = None
+
+    # ******************* Selecting and setting up interface for further uses... *******************
+    interfaces = get_interfaces_name()
+    print_interfaces(interfaces)
+
+    print(f"\n {colors.DARK_YELLOW}Note: Please select interface that supports monitor mode.{colors.RESET}")
+    interface_id = int(input(" Select an interface (e.g: 0, 1): "))
+    SELECTED_INTERFACE = interfaces[interface_id]
+
+    terminal.clear()
+
+    print(f"{colors.YELLOW}Putting interfaces into monitor mode...{colors.GREEN}")
+    to_monitor_mode(SELECTED_INTERFACE)
+
+    # Selecting interface automatically after changing mode of the interface as with some adapter name changes when using monitor mode
+    interfaces = get_interfaces_name()
+    SELECTED_INTERFACE = interfaces[interface_id]
+    
+    terminal.clear()
+    return SELECTED_INTERFACE

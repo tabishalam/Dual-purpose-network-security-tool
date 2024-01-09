@@ -1,6 +1,7 @@
-import colors
 import shutil
 import subprocess
+
+import style.colors as colors
 
 
 # Check if all the required tool are installed...
