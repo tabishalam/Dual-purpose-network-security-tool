@@ -1,5 +1,6 @@
 from tabulate import tabulate
 from scapy.all import *
+import utils.clear_terminal as clear_terminal
 import time
 import os
 
@@ -29,7 +30,7 @@ def start_scan():
     try:
         while True:
             # Clear the terminal screen for updates
-            os.system("clear")
+            clear_terminal
             # sniff(iface=interface, prn=process_packet, timeout=4)
 
             print(networks)
