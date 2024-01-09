@@ -1,5 +1,6 @@
 import scapy.all as scapy
 
+# Search for all the connected device on the given network
 def scan(ip):
     arp_request = scapy.ARP(pdst=ip)
     broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
@@ -15,4 +16,12 @@ def scan(ip):
         print(client[1].psrc + "\t\t" + client[1].hwsrc)
     print(clients_list)
 
-scan("192.168.170.1/24")
+
+# Calls scan function
+def start_scan():
+    router_ip = input("Please enter router IP: ")
+    scan(f"{router_ip}/24")
+    
+
+if __name__ == __main__:
+    start_scan()
