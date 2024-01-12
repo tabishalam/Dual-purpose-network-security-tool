@@ -7,13 +7,13 @@ import csv
 
 
 TIMESTAMP = time.strftime("%Y%m%d_%H%M%S")
-OUTPUT_FILE = f"scanned_wifi_{TIMESTAMP}" 
+OUTPUT_FILE = f"./scanned_wifi_{TIMESTAMP}" 
 
 
 def print_scanned_result():
     rows = []
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(script_dir, f"{OUTPUT_FILE}-01.csv")
+    file_path = os.path.join(f"./{OUTPUT_FILE}-01.csv")
 
     # Opening the output file
     with open(file_path, "r") as raw_output:

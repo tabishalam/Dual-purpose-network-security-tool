@@ -2,7 +2,7 @@ import style.colors as colors
 import arp.arp_spoof as arp_spoof
 import wifi.wifi_scanner as wifi_scanner
 import utils.terminal as terminal
-import wifi.network_scanner as network_scanner
+import wifi.get_connected_clients as get_connected_clients
 import utils.tools_management as tools_management
 import utils.interface_management as interface_management
 
@@ -21,10 +21,10 @@ def attack_options():
 
     match selected_option:
         case 1:
-            network_scanner.start_scan()
+            wifi_scanner.start_scan(SELECTED_INTERFACE)
             
         case 2:
-            network_scanner.start_scan()
+            get_connected_clients.start_scan()
             
         case 3:
             arp_spoof.start_spoof()

@@ -1,58 +1,63 @@
-from tabulate import tabulate
+from threading import Thread
 from scapy.all import *
-import utils.terminal as terminal
+import pandas
 import time
 import os
 
-# SSID - Name of the network
-# BSSID - MAC address of the network
-
-# Discovered network and their clients
-networks = {}
 
 
-# Extracting BSSID, SSID, channel and client information from network packet
-def process_packet(packet):
-    if packet.haslayer(Dot11):
-        # Checking network and storing them
-        if packet.type == 0 and packet.subtype == 8:
-            ssid = packet.info.decode("utf-8")  # Decoding bytes to utf-8 / human-readable language
-            bssid = packet.addr2
-            channel = int(ord(packet[Dot11Elt:3].info))
-
-            if bssid not in networks:
-                # networks.append({"SSID": ssid, "Channel": channel})
-                networks[bssid] = {"SSID": ssid, "Channel": channel}
-                # networks[bssid] = {"SSID": ssid, "Channel": channel, "Clients": set()}
+# Dataframe to contain all the nearby WiFi networks
+networks_list = pandas.DataFrame(columns=["BSSID", "SSID", "Signal", "Channel", "Encryption"])
+# Sets the index to MAC address of the network
+networks_list.set_index("BSSID", inplace=True)
 
 
-def start_scan():
-    try:
-        while True:
-            # Clear the terminal screen for updates
-            terminal
-            # sniff(iface=interface, prn=process_packet, timeout=4)
+def callback(packet):
+    if packet.haslayer(Dot11Beacon):
+        bssid = packet[Dot11].addr2 # Gets the mac address of network
+        ssid = packet[Dot11Elt].info.decode() # Gets the name of network
 
-            print(networks)
-            # Display information about Wi-Fi networks and their clients
-            data_table = tabulate(networks.items(), headers="keys", tablefmt="plain")
-            print(data_table)
-    #         print("SSID \t\t\t BSSID \t\t\t Channel")
-    #         for bssid, info in networks.items():
-    #             ssid = info["SSID"]
-    #             channel = info["Channel"]
-    #             clients = info["Clients"]
-    #             #print(f"SSID: {ssid}, BSSID: {bssid}, Channel: {channel}")
-    #             print(f"{ssid} \t\t\t {bssid} \t\t\t {channel}")
-    #             #print("Clients:")
-    #             #for client_mac in clients:
-    #             #   print(f"  - {client_mac}")
-    # #
-    #         # Clear the networks data for the next scan
-    #         #networks = {}
-    #
-    #         # Wait for a few seconds before the next scan
-            time.sleep(2)
+        # Get signal strength
+        try:
+            signal = packet.dBm_AntSignal
+        except:
+            signal = "N/A"
 
-    except KeyboardInterrupt:
-        pass
+        # Extract network stats
+        stats = packet[Dot11Beacon].network_stats()
+
+        # Get channel of the network
+        channel = stats.get("channel")
+
+        # Get encryption type
+        encryption = stats.get("crypto")
+        networks_list.loc[bssid] = (ssid, signal, channel, encryption)
+
+
+def display_networks():
+    while True:
+        os.system("clear")
+        print(networks_list)
+        time.sleep(0.5)
+
+
+def change_channel():
+    ch = 1
+    while True:
+        os.system(f"iwconfig {interface} channel {ch}")
+        ch = ch % 14 + 1
+        time.sleep(0.5)
+
+
+if __name__ == "__main__":
+    Interface = "wlan0"
+    printer = Thread(target=display_networks)
+    printer.daemon = True
+    printer.start()
+
+    channel_changer = Thread(target=change_channel)
+    channel_changer.daemon = True
+    channel_changer.start()
+
+    sniff(prn=callback, iface=Interface)
+
