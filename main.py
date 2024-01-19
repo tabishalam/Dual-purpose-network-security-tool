@@ -27,7 +27,7 @@ def attack_options():
             get_connected_clients.start_scan()
             
         case 3:
-            arp_spoof.start_spoof()
+            arp_spoof.start_spoof(SELECTED_INTERFACE)
 
 
 # Main option to select operation mode of the tool

