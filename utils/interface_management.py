@@ -2,12 +2,11 @@ import psutil
 import subprocess
 
 import style.colors as colors
-import utils.terminal as terminal
+import utils.clear_terminal as clear_terminal
 
 
 # Global Variable
 SELECTED_INTERFACE = ""
-
 
 
 # Return list of interfaces with full details
@@ -69,7 +68,7 @@ def select_interface():
     interface_id = int(input(" Select an interface (e.g: 0, 1): "))
     SELECTED_INTERFACE = interfaces[interface_id]
 
-    terminal.clear()
+    clear_terminal # Clear terminal
 
     print(f"{colors.YELLOW}Putting interfaces into monitor mode...{colors.GREEN}")
     to_monitor_mode(SELECTED_INTERFACE)
@@ -78,5 +77,5 @@ def select_interface():
     interfaces = get_interfaces_name()
     SELECTED_INTERFACE = interfaces[interface_id]
     
-    terminal.clear()
+    clear_terminal # Clear terminal
     return SELECTED_INTERFACE

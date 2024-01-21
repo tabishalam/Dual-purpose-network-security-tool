@@ -1,10 +1,11 @@
 import style.colors as colors
-import arp.arp_spoof as arp_spoof
+import arp.arp_spoofer as arp_spoofer
 import wifi.wifi_scanner as wifi_scanner
-import utils.terminal as terminal
-import wifi.get_connected_clients as get_connected_clients
+import utils.clear_terminal as clear_terminal
 import utils.tools_management as tools_management
+import wifi.get_connected_clients as get_connected_clients
 import utils.interface_management as interface_management
+
 
 # Global variable
 SELECTED_INTERFACE = "" # WiFi interface 
@@ -17,7 +18,8 @@ def attack_options():
     print("3. Arp Spoofing attack")
     
     selected_option = int(input("Select any option: "))
-    terminal.clear()
+
+    clear_terminal # Clears terminal
 
     match selected_option:
         case 1:
@@ -27,7 +29,7 @@ def attack_options():
             get_connected_clients.start_scan()
             
         case 3:
-            arp_spoof.start_spoof(SELECTED_INTERFACE)
+            arp_spoofer.start_spoof(SELECTED_INTERFACE)
 
 
 # Main option to select operation mode of the tool
@@ -36,7 +38,8 @@ def main_option():
     print("2. Defend")
     
     selected_option = int(input("Select any option: "))
-    terminal.clear()
+
+    clear_terminal # Clears terminal
 
     
     match selected_option:
@@ -75,20 +78,18 @@ def main_option():
 def main():
     global SELECTED_INTERFACE # Acccesing global variable
 
-    terminal.clear()
+    clear_terminal # Clears terminal
  
-
     # Checking and installing required Tools/Packages
     print(f"{colors.YELLOW}Checking if required application is installed......{colors.RESET} \n")
     tools_management.manage_tools()
 
-    terminal.clear() 
+    clear_terminal # Clears terminal
 
     # Select interface for futher use...
     SELECTED_INTERFACE = interface_management.select_interface()    
     
-    # Clears terminal
-    terminal.clear() 
+    clear_terminal # Clears terminal 
 
     # Print options
     main_option()    

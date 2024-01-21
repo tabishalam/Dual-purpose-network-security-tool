@@ -2,7 +2,7 @@
 import time
 import subprocess
 import scapy.all as scapy
-import sniffer
+import arp.sniffer as sniffer
 
 target_ip = ""
 router_ip = ""
