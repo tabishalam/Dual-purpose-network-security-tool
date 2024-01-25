@@ -1,9 +1,9 @@
 import style.colors as colors
+import utils.terminal as terminal
 import arp.arp_spoofer as arp_spoofer
 import wifi.wifi_scanner as wifi_scanner
-import utils.clear_terminal as clear_terminal
 import utils.tools_management as tools_management
-import wifi.get_connected_clients as get_connected_clients
+import wifi.connected_devices as connected_devices
 import utils.interface_management as interface_management
 
 
@@ -19,14 +19,14 @@ def attack_options():
     
     selected_option = int(input("Select any option: "))
 
-    clear_terminal # Clears terminal
+    terminal.clear() # Clears terminal
 
     match selected_option:
         case 1:
             wifi_scanner.start_scan(SELECTED_INTERFACE)
             
         case 2:
-            get_connected_clients.start_scan()
+            connected_devices.start_scan()
             
         case 3:
             arp_spoofer.start_spoof(SELECTED_INTERFACE)
@@ -39,14 +39,16 @@ def main_option():
     
     selected_option = int(input("Select any option: "))
 
-    clear_terminal # Clears terminal
+    terminal.clear() # Clears terminal
 
     
     match selected_option:
         case 1:
+            terminal.clear()
             attack_options()
-        
+
         case 2:
+            terminal.clear() # Clears terminal
             pass
         
         case _:
@@ -78,18 +80,18 @@ def main_option():
 def main():
     global SELECTED_INTERFACE # Acccesing global variable
 
-    clear_terminal # Clears terminal
+    terminal.clear() # Clears terminal
  
     # Checking and installing required Tools/Packages
     print(f"{colors.YELLOW}Checking if required application is installed......{colors.RESET} \n")
     tools_management.manage_tools()
 
-    clear_terminal # Clears terminal
+    terminal.clear() # Clears terminal
 
     # Select interface for futher use...
     SELECTED_INTERFACE = interface_management.select_interface()    
     
-    clear_terminal # Clears terminal 
+    terminal.clear() # Clears terminal 
 
     # Print options
     main_option()    
