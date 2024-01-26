@@ -26,7 +26,7 @@ def attack_options():
             wifi_scanner.start_scan(SELECTED_INTERFACE)
             
         case 2:
-            connected_devices.start_scan()
+            connected_devices.start_scan(SELECTED_INTERFACE)
             
         case 3:
             arp_spoofer.start_spoof(SELECTED_INTERFACE)
@@ -54,32 +54,12 @@ def main_option():
         case _:
             print(f"{colors.RED}Please select a valid option!!{colors.RESET}\n")
             main_option()
-            
-            
-# def main_options():
-#     print("1. Scan for targets")
-#     print("2. Show connected Devices")
-#     print("3. Arp spoof attack")
-#     print("0. Exit")
-
-#     selected_option = int(input("Select any option: "))
-
-#     match selected_option:
-#         case 1:
-#             wifi_scanner.start_scan(SELECTED_INTERFACE)
-#         case 2:
-#             network_scanner.scan()
-#         case 3:
-#             arp_spoof.start_spoof()
-#         case _:
-#             print("Select a valid option...")
-#             main_options()
 
 
 # Main function to control the flow of program
 def main():
     global SELECTED_INTERFACE # Acccesing global variable
-
+    
     terminal.clear() # Clears terminal
  
     # Checking and installing required Tools/Packages

@@ -85,6 +85,6 @@ if __name__ == "__main__":
 
     channel_changer = Thread(target=change_channel)
     channel_changer.daemon = True
-    channel_changer.start()
+    channel_changer.start()f
 
     sniff(prn=sniff_packet, iface=interface)
