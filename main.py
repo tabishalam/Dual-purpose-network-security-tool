@@ -1,7 +1,9 @@
+import os
+from threading import Thread
 import style.colors as colors
 import utils.terminal as terminal
 import arp.arp_spoofer as arp_spoofer
-import wifi.wifi_scanner as wifi_scanner
+import wifi.nearby_wifi_scanner as wifi_scanner
 import utils.tools_management as tools_management
 import wifi.connected_devices as connected_devices
 import utils.interface_management as interface_management
@@ -9,6 +11,34 @@ import utils.interface_management as interface_management
 
 # Global variable
 SELECTED_INTERFACE = "" # WiFi interface 
+SELECTED_NETWORK = ""
+
+
+# Options to show after wifi scanning completes
+def wifi_scan_options():
+    print("1. Capture Handshake")
+    print("2. De-authenticate single clint")
+    print("3. De-authenticate All clients")
+    print("4. Go Back")
+    print("5. Exit")
+
+    selected_option = input("Select an option: ")
+
+    match selected_option:
+        case 1:
+            pass
+
+        case 2:
+            pass
+
+        case 3:
+            pass
+
+        case 4:
+            pass
+
+        case 5:
+            pass
 
 
 # Options for attacking mode
@@ -24,7 +54,10 @@ def attack_options():
     match selected_option:
         case 1:
             wifi_scanner.start_scan(SELECTED_INTERFACE)
-            
+            terminal.clear()
+            wifi_scanner.print_final_scan()
+            wifi_scanner.select_network()
+
         case 2:
             connected_devices.start_scan(SELECTED_INTERFACE)
             
@@ -75,6 +108,7 @@ def main():
 
     # Print options
     main_option()    
+
 
 if __name__ == "__main__":
     main()

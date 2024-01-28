@@ -13,4 +13,4 @@ def default_gateway(selected_interface):
         print("Connect to a router to get gateway ip address.")
 
 if __name__ == "__main__":
-    scan("wlan0")
+    default_gateway("wlan0")
