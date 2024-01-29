@@ -7,9 +7,15 @@ from threading import Thread
 
 # Dictionary to store networks data
 SCANNED_NETWORKS = {}
+SCANNED_CLIENTS = {}
 
 # Global flag to signal threads to stop
 STOP_THREADS = False
+
+
+def client_scan_thread(SELECTED_INTERFACE):
+    while not STOP_THREADS:
+        sniff(prn=scan_clients, iface=SELECTED_INTERFACE)
 
 
 # Select a network from the scanned network list
@@ -23,7 +29,7 @@ def select_network():
     print(networks.get(selected_network))   
 
 
-def sniff_packet(packet):
+def scan_wifi(packet):
     global STOP_THREADS
 
     if STOP_THREADS:
@@ -46,6 +52,23 @@ def sniff_packet(packet):
         SCANNED_NETWORKS[bssid] = data
 
 
+# Scans for client/devices connected on wifi
+def scan_clients(packet):
+    if packet.haslayer(Dot11):
+        bssid = packet.addr3
+        ssid = packet.info.decode("utf-8")
+
+        if packet.type == 0 and packet.subtype == 8:  # Beacon frame for networks
+            SCANNED_NETWORKS[bssid] = {'BSSID': bssid, 'SSID': ssid}
+        elif packet.type == 0 and packet.subtype == 4:  # Probe request for clients
+            client_mac = packet.addr2
+            if bssid in SCANNED_CLIENTS:
+                SCANNED_CLIENTS[bssid].append({'BSSID': bssid, 'Client MAC': client_mac})
+            else:
+                SCANNED_CLIENTS[bssid] = [{'BSSID': bssid, 'Client MAC': client_mac}]
+
+
+
 # Print scanned wifi networks
 def print_final_scan():
     df = pd.DataFrame(list(SCANNED_NETWORKS.values()))
@@ -55,14 +78,32 @@ def print_final_scan():
 
 
 # Displays the networks
-def print_networks():
+def print_scanned_data():
     global STOP_THREADS
 
     while not STOP_THREADS:
         os.system("cls" if os.name == "nt" else "clear")  # Clear the terminal
-        df = pd.DataFrame(list(SCANNED_NETWORKS.values()))
-        df.index.name = "WiFi No."
-        print(df.to_markdown(index=True))
+
+        # Display scanned networks using Pandas DataFrame
+        if SCANNED_NETWORKS:
+            df_networks = pd.DataFrame(list(SCANNED_NETWORKS.values()))
+            df_networks.index.name = "WiFi No."
+            print("Scanned Networks:")
+            print(df_networks.to_markdown(index=True))
+        else:
+            print("No networks scanned yet.")
+
+        print("\n")
+
+        # Display scanned clients using Pandas DataFrame
+        if SCANNED_CLIENTS:
+            df_clients = pd.concat([pd.DataFrame(clients) for clients in SCANNED_CLIENTS.values()], ignore_index=True)
+            df_clients.index.name = "Client No."
+            print("Scanned Clients:")
+            print(df_clients.to_markdown(index=True))
+        else:
+            print("No clients scanned yet.")
+        print(SCANNED_CLIENTS)
         time.sleep(0.5)
 
 
@@ -95,17 +136,21 @@ def change_channel(interface):
 # Starts wifi scanning
 def start_scan(SELECTED_INTERFACE):
     global STOP_THREADS
-
-    printer = Thread(target=print_networks)
-    printer.daemon = True
-    printer.start()
-
-    channel_changer = Thread(target=change_channel, args=(SELECTED_INTERFACE,))
-    channel_changer.daemon = True
-    channel_changer.start()
-
+    
     try:
-        sniff(prn=sniff_packet, iface=SELECTED_INTERFACE)
+        printer = Thread(target=print_scanned_data)
+        printer.daemon = True
+        printer.start()
+
+        channel_changer = Thread(target=change_channel, args=(SELECTED_INTERFACE,))
+        channel_changer.daemon = True
+        channel_changer.start()
+        
+        client_scanning = Thread(target=client_scan_thread, args=(SELECTED_INTERFACE,))
+        client_scanning.daemon = True
+        client_scanning.start()
+
+        sniff(prn=scan_wifi, iface=SELECTED_INTERFACE)
 
     except KeyboardInterrupt:
         pass
@@ -115,11 +160,12 @@ def start_scan(SELECTED_INTERFACE):
         print("Scanning Complete...")
         printer.join()  # Wait for the printer thread to finish
         channel_changer.join()  # Wait for the channel_changer thread to finish
-
+        client_scanning.join()
+        
 
 if __name__ == "__main__":
     interface = "wlan0"
-    printer = Thread(target=print_networks)
+    printer = Thread(target=print_scanned_data)
     printer.daemon = True
     printer.start()
 
@@ -128,7 +174,7 @@ if __name__ == "__main__":
     channel_changer.start()
 
     try:
-        sniff(prn=sniff_packet, iface=interface)
+        sniff(prn=scan_wifi, iface=interface)
     except KeyboardInterrupt:
         STOP_THREADS = True
 
