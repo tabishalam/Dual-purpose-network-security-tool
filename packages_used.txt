@@ -1,2 +1,5 @@
 scapy
 scapy_http
+getmac // To be thought...
+netfilterqueue
+https://stackoverflow.com/questions/63254854/netfilterqueue-not-installing

@@ -13,9 +13,9 @@ SCANNED_CLIENTS = {}
 STOP_THREADS = False
 
 
-def client_scan_thread(SELECTED_INTERFACE):
-    while not STOP_THREADS:
-        sniff(prn=scan_clients, iface=SELECTED_INTERFACE)
+# def client_scan_thread(SELECTED_INTERFACE):
+    # while not STOP_THREADS:
+    #     sniff(prn=scan_clients, iface=SELECTED_INTERFACE)
 
 
 # Select a network from the scanned network list
@@ -53,19 +53,19 @@ def scan_wifi(packet):
 
 
 # Scans for client/devices connected on wifi
-def scan_clients(packet):
-    if packet.haslayer(Dot11):
-        bssid = packet.addr3
-        ssid = packet.info.decode("utf-8")
+# def scan_clients(packet):
+    # if packet.haslayer(Dot11):
+    #     bssid = packet.addr3
+    #     ssid = packet.info.decode("utf-8")
 
-        if packet.type == 0 and packet.subtype == 8:  # Beacon frame for networks
-            SCANNED_NETWORKS[bssid] = {'BSSID': bssid, 'SSID': ssid}
-        elif packet.type == 0 and packet.subtype == 4:  # Probe request for clients
-            client_mac = packet.addr2
-            if bssid in SCANNED_CLIENTS:
-                SCANNED_CLIENTS[bssid].append({'BSSID': bssid, 'Client MAC': client_mac})
-            else:
-                SCANNED_CLIENTS[bssid] = [{'BSSID': bssid, 'Client MAC': client_mac}]
+    #     if packet.type == 0 and packet.subtype == 8:  # Beacon frame for networks
+    #         SCANNED_NETWORKS[bssid] = {'BSSID': bssid, 'SSID': ssid}
+    #     elif packet.type == 0 and packet.subtype == 4:  # Probe request for clients
+    #         client_mac = packet.addr2
+    #         if bssid in SCANNED_CLIENTS:
+    #             SCANNED_CLIENTS[bssid].append({'BSSID': bssid, 'Client MAC': client_mac})
+    #         else:
+    #             SCANNED_CLIENTS[bssid] = [{'BSSID': bssid, 'Client MAC': client_mac}]
 
 
 
@@ -93,17 +93,18 @@ def print_scanned_data():
         else:
             print("No networks scanned yet.")
 
-        print("\n")
+        # print("\n")
 
         # Display scanned clients using Pandas DataFrame
-        if SCANNED_CLIENTS:
-            df_clients = pd.concat([pd.DataFrame(clients) for clients in SCANNED_CLIENTS.values()], ignore_index=True)
-            df_clients.index.name = "Client No."
-            print("Scanned Clients:")
-            print(df_clients.to_markdown(index=True))
-        else:
-            print("No clients scanned yet.")
-        print(SCANNED_CLIENTS)
+        # if SCANNED_CLIENTS:
+        #     df_clients = pd.concat([pd.DataFrame(clients) for clients in SCANNED_CLIENTS.values()], ignore_index=True)
+        #     df_clients.index.name = "Client No."
+        #     print("Scanned Clients:")
+        #     print(df_clients.to_markdown(index=True))
+        # else:
+        #     print("No clients scanned yet.")
+        # print(SCANNED_CLIENTS)
+
         time.sleep(0.5)
 
 
@@ -123,11 +124,6 @@ def change_channel(interface):
         os.system(f"iwconfig {interface} channel {ch_5ghz}")
         ch_5ghz = (ch_5ghz % 165) + 1
         time.sleep(0.5)
-
-        print(interface)
-        print("4G: ", ch_2_4ghz)
-        print("5G: ", ch_5ghz)
-        print(STOP_THREADS)
         
         if ch_5ghz == 165:
             ch_5ghz = 36
@@ -146,9 +142,9 @@ def start_scan(SELECTED_INTERFACE):
         channel_changer.daemon = True
         channel_changer.start()
         
-        client_scanning = Thread(target=client_scan_thread, args=(SELECTED_INTERFACE,))
-        client_scanning.daemon = True
-        client_scanning.start()
+        # client_scanning = Thread(target=client_scan_thread, args=(SELECTED_INTERFACE,))
+        # client_scanning.daemon = True
+        # client_scanning.start()
 
         sniff(prn=scan_wifi, iface=SELECTED_INTERFACE)
 
@@ -160,7 +156,7 @@ def start_scan(SELECTED_INTERFACE):
         print("Scanning Complete...")
         printer.join()  # Wait for the printer thread to finish
         channel_changer.join()  # Wait for the channel_changer thread to finish
-        client_scanning.join()
+        # client_scanning.join()
         
 
 if __name__ == "__main__":
