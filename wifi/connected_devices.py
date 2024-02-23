@@ -1,6 +1,5 @@
-# 192.168.170.2
-import scapy.all as scapy
 import subprocess
+import scapy.all as scapy
 
 
 # Print connected devices
@@ -13,7 +12,6 @@ def print_clients(result):
 # Fetch all the connected devices on the network
 def scan(gateway_ip):
     ip_range = gateway_ip + "/24"
-    print(ip_range)
     arp_request = scapy.ARP(pdst=ip_range)
     broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
     arp_request_broadcast = broadcast/arp_request
@@ -31,14 +29,9 @@ def scan(gateway_ip):
 def default_gateway(selected_interface):
     command = f"ip route show dev {selected_interface}"
     output = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
-    
     gateway_ip = output.stdout.split()[2]
 
     return gateway_ip
-
-    # if len(gateway_ip) > 0:
-    # else:
-    #     print("Connect to a router to get gateway ip address.")
 
 
 # Starts scanning
@@ -46,7 +39,9 @@ def start_scan(selected_interface):
     gateway_ip = default_gateway(selected_interface)
     scan(gateway_ip)
 
+
 if __name__ == "__main__":
+    print("Note: Make sure you are connected to the same network before running the program...")
     gateway_ip = input("Enter ip address of the gateway: ")
     scan(gateway_ip)
     

