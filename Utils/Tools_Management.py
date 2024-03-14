@@ -1,4 +1,5 @@
 import shutil
+import importlib
 import subprocess
 
 from Style import Colors
@@ -12,8 +13,14 @@ def check_installed(tool):
 # Installs missing tools
 def install_missing_tools(tools_list):
     for tool in tools_list:
-        print(["sudo", "apt", "install", tool])
-        # subprocess.run(["sudo", "apt", "install", tool])
+        command = "apt install tool"
+        subprocess.run(command, check=True, shell=True)
+
+
+def install_missing_packages(packages_list):
+    for package in packages_list:
+        command = f"python -m pip install --upgrade {package}"
+        subprocess.run(command, check=True, shell=True)
 
 
 # This function handle the core functionality of managing all other functions...
@@ -23,8 +30,8 @@ def manage_tools():
     tools_list = ["airmon-ng", "airodump-ng"]  # Required tools list
     not_installed_tools = []  # Not installed required tools list
 
-    python_library_list = ["tabulate", "psutil"]  # Required python library list
-    not_installed_libraries = []  # Not installed required python library list
+    python_packages = ["tabulate", "psutil", "scapy", "socket", "netfilterqueue", "ipaddress"]  # Required python library list
+    not_installed_packages = []  # Not installed required python library list
 
     
     for tool in tools_list:
@@ -35,7 +42,15 @@ def manage_tools():
             print(f"{Colors.MAGENTA}{tool}: {Colors.RED}No installed...{Colors.RESET}")
 
     
-    while install_tools is None and (len(not_installed_tools) > 0 or len(not_installed_libraries) > 0):
+    for package in python_packages:
+        try:
+            importlib.import_module(package)
+
+        except ImportError as e:
+            not_installed_packages.append(package)
+
+
+    while install_tools is None and (len(not_installed_tools) > 0 or len(not_installed_packages) > 0):
         install_tools = input("\n Install required applications: (Y/N) / (y/n)\n")
 
         if install_tools == "y" or install_tools == "Y":
