@@ -1,7 +1,7 @@
 import shutil
 import subprocess
 
-import style.colors as colors
+from Style import Colors
 
 
 # Check if all the required tool are installed...
@@ -10,8 +10,8 @@ def check_installed(tool):
 
 
 # Installs missing tools
-def install_missing_tools(not_installed_tools):
-    for tool in not_installed_tools:
+def install_missing_tools(tools_list):
+    for tool in tools_list:
         print(["sudo", "apt", "install", tool])
         # subprocess.run(["sudo", "apt", "install", tool])
 
@@ -26,27 +26,27 @@ def manage_tools():
     python_library_list = ["tabulate", "psutil"]  # Required python library list
     not_installed_libraries = []  # Not installed required python library list
 
-    #
+    
     for tool in tools_list:
         if check_installed(tool):
-            print(f"{colors.MAGENTA}{tool}: {colors.GREEN}Installed...{colors.RESET}")
+            print(f"{Colors.MAGENTA}{tool}: {Colors.GREEN}Installed...{Colors.RESET}")
         else:
             not_installed_tools.append(tool)
-            print(f"{colors.MAGENTA}{tool}: {colors.RED}No installed...{colors.RESET}")
+            print(f"{Colors.MAGENTA}{tool}: {Colors.RED}No installed...{Colors.RESET}")
 
-    #
+    
     while install_tools is None and (len(not_installed_tools) > 0 or len(not_installed_libraries) > 0):
         install_tools = input("\n Install required applications: (Y/N) / (y/n)\n")
 
         if install_tools == "y" or install_tools == "Y":
-            print(f"{colors.GREEN} Installing required applications... {colors.RESET}")
+            print(f"{Colors.GREEN} Installing required applications... {Colors.RESET}")
 
             try:
                 install_missing_tools(not_installed_tools)
-                print(f"{colors.GREEN}Successfully installed all missing tools...{colors.RESET}")
+                print(f"{Colors.GREEN}Successfully installed all missing tools...{Colors.RESET}")
 
             except subprocess.CalledProcessError:
-                print(f"{colors.RED}Failed to install applications...{colors.RESET}")
+                print(f"{Colors.RED}Failed to install applications...{Colors.RESET}")
 
         else:
-            print(f"{colors.YELLOW}Starting application with limited functionality... \n{colors.RESET}")
+            print(f"{Colors.YELLOW}Starting application with limited functionality... \n{Colors.RESET}")

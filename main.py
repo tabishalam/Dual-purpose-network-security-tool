@@ -1,13 +1,11 @@
 import sys
-import style.colors as colors
-import utils.terminal as terminal
-import arp.arp_spoofer as arp_spoofer
-import utils.tools_management as tools_management
-import wifi.connected_devices as connected_devices
-import utils.interface_management as interface_management
 
+from ARP import ARP_Spoofer, Detector as ARP_Detector, DNS_Spoofer, File_Intercepter
+from Style import Colors
+from Network_Scanner import Network_Scanner
+from Utils import Terminal, Tools_Management, Interface_Management
 
-# Global variable
+# # Global variable
 SELECTED_INTERFACE = "" # WiFi interface 
 EXIT = False
 
@@ -19,12 +17,12 @@ def mactch_case(option_list, option):
                 attack_options()
 
             case 2:
-                pass
+                ARP_Detector.sniff(SELECTED_INTERFACE)
             
             case _:
-                print(f"{colors.RED}Please select a valid option!!{colors.RESET}\n")
+                print(f"{Colors.RED}Please select a valid option!!{Colors.RESET}\n")
                 input("Press any key to try again!!!")
-                terminal.clear()
+                Terminal.clear()
                 return True
 
 
@@ -32,17 +30,17 @@ def mactch_case(option_list, option):
     if option_list == 2:
         match option:
             case 1:
-                connected_devices.start_scan(SELECTED_INTERFACE)
+                Network_Scanner.start_scan(SELECTED_INTERFACE)
                 print("\n")
 
             case 2:
-                arp_spoofer.start_spoof(SELECTED_INTERFACE)
+                ARP_Spoofer.start_spoof(SELECTED_INTERFACE)
 
             case 3:
-                arp_spoofer.start_spoof(SELECTED_INTERFACE)
+                DNS_Spoofer.start_spoofing()
 
             case 4:
-                arp_spoofer.start_spoof(SELECTED_INTERFACE)
+                File_Intercepter.run()
 
             case 5:
                 main_option()
@@ -54,9 +52,9 @@ def mactch_case(option_list, option):
                     print("[+] Program Stopped!!!")
                 
             case _:
-                print(f"{colors.RED}Please select a valid option!!{colors.RESET}\n")
+                print(f"{Colors.RED}Please select a valid option!!{Colors.RESET}\n")
                 input("Press any key to try again!!!")
-                terminal.clear()
+                Terminal.clear()
                 return True
             
 
@@ -71,10 +69,10 @@ def attack_options():
     print("0. Exit")
     
     selected_option = int(input("Select any option: "))
-    terminal.clear() # Clears terminal
+    Terminal.clear() # Clears Terminals
 
-    while EXIT != True:
-        invalid_selection = mactch_case(2, selected_option)
+    while EXIT is not True:
+        mactch_case(2, selected_option)
         attack_options()
 
 
@@ -85,30 +83,32 @@ def main_option():
     print("2. Defend")
     
     selected_option = int(input("Select any option: "))
-    terminal.clear() # Clears terminal
+    Terminal.clear() # Clears Terminal
 
-    while EXIT != True:
-        invalid_selection = mactch_case(1, selected_option)
+    while EXIT is not True:
+        mactch_case(1, selected_option)
         main_option()
 
 
 # Main function to control the flow of program
-def main():
-    global SELECTED_INTERFACE # Acccesing global variable
-    terminal.clear() # Clears terminal
- 
+def start_main():
+    global SELECTED_INTERFACE
+    Terminal.clear() # Clears terminal
+
     # Checking and installing required Tools/Packages
-    print(f"{colors.YELLOW}Checking if required application is installed......{colors.RESET} \n")
-    tools_management.manage_tools()
-    terminal.clear() # Clears terminal
+    print(f"{Colors.YELLOW}Checking if required application is installed......{Colors.RESET} \n")
+    Tools_Management.manage_tools()
+    Terminal.clear() # Clears terminal
 
     # Select interface for futher use...
-    SELECTED_INTERFACE = interface_management.select_interface()    
-    terminal.clear() # Clears terminal 
+    SELECTED_INTERFACE = Interface_Management.select_interface()
+    Terminal.clear() # Clears terminal 
 
     # Print options
     main_option()    
 
 
 if __name__ == "__main__":
-    main()
+    start_main()
+    # Main = Main()
+    # Main.start_main()
