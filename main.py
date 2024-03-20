@@ -1,9 +1,9 @@
 import sys
 
-from ARP import ARP_Spoofer, Detector as ARP_Detector, DNS_Spoofer, File_Intercepter
 from Style import Colors
 from Network_Scanner import Network_Scanner
 from Utils import Terminal, Tools_Management, Interface_Management
+from ARP import ARP_Spoofer, Detector as ARP_Detector, DNS_Spoofer, File_Intercepter
 
 # # Global variable
 SELECTED_INTERFACE = "" # WiFi interface 
@@ -34,15 +34,18 @@ def mactch_case(option_list, option):
                 print("\n")
 
             case 2:
+                ARP_Spoofer.start_spoof_sniff(SELECTED_INTERFACE)
+            
+            case 3:
                 ARP_Spoofer.start_spoof(SELECTED_INTERFACE)
 
-            case 3:
+            case 4:
                 DNS_Spoofer.start_spoofing()
 
-            case 4:
+            case 5:
                 File_Intercepter.run()
 
-            case 5:
+            case 6:
                 main_option()
 
             case 0:
@@ -62,10 +65,11 @@ def mactch_case(option_list, option):
 # Option code 2
 def attack_options():
     print("1. Get all connected device")
-    print("2. Arp Spoofing attack")
-    print("3. DNS Spoofing")
-    print("4. Replace download file")
-    print("5. Go Back")
+    print("2. Arp Spoofing attack (ARP Spoofing and Data Sniffing)")
+    print("3. Arp Spoofing attack (ARP Spoofing only)")
+    print("4. DNS Spoofing")
+    print("5. Replace download file")
+    print("6. Go Back")
     print("0. Exit")
     
     selected_option = int(input("Select any option: "))

@@ -52,12 +52,12 @@ def process_packet(packet):
 def define_queue_iptable():
     queue_number = "99"
     subprocess.run("iptables --flush", check=True, shell=True)
-    subprocess.call(["sudo", "iptables","-I","FORWARD","-j","NFQUEUE","--queue-num", queue_number])
+    # subprocess.call(["sudo", "iptables","-I","FORWARD","-j","NFQUEUE","--queue-num", queue_number])
 
     # # packet from the local machine will not go in this chain ,they will only go in the queue if they are comming from the remote computer
     # # for testing his on local host uncomment the below two commands
-    # subprocess.call(["iptables","-I","OUTPUT","-j","NFQUEUE","--queue-num",queue_number])
-    # subprocess.call(["iptables","-I","INPUT","-j","NFQUEUE","--queue-num",queue_number])
+    subprocess.call(["iptables","-I","OUTPUT","-j","NFQUEUE","--queue-num",queue_number])
+    subprocess.call(["iptables","-I","INPUT","-j","NFQUEUE","--queue-num",queue_number])
 
     # binding the queue to the nerfilter queue
     queue = netfilterqueue.NetfilterQueue()
