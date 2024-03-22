@@ -35,10 +35,10 @@ def mactch_case(option_list, option):
                 print("\n")
 
             case 2:
-                ARP_Spoofer.start_spoof_sniff(SELECTED_INTERFACE)
-            
-            case 3:
                 ARP_Spoofer.start_spoof(SELECTED_INTERFACE)
+
+            case 3:
+                ARP_Spoofer.start_spoof_sniff(SELECTED_INTERFACE)
 
             case 4:
                 DNS_Spoofer.start_spoofing()
@@ -67,8 +67,8 @@ def mactch_case(option_list, option):
 # Option code 2
 def attack_options():
     print("1. Get all connected device")
-    print("2. Arp Spoofing attack (ARP Spoofing and Data Sniffing)")
-    print("3. Arp Spoofing attack (ARP Spoofing only)")
+    print("2. Arp Spoofing attack (ARP Spoofing only)")
+    print("3. Arp Spoofing attack (ARP Spoofing and Data Sniffing)")
     print("4. DNS Spoofing")
     print("5. Replace download file")
     print("6. Go Back")

