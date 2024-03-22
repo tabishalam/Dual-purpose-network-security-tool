@@ -28,9 +28,7 @@ def scan_devices(gateway_ip):
 
 # Gets the default gateway ip address or ip address of router
 def default_gateway(SELECTED_INTERFACE):
-    print(SELECTED_INTERFACE)
     try:
-        print(SELECTED_INTERFACE)
         command = f"sudo ip route show dev {SELECTED_INTERFACE}"
         output = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
         gateway_ip = output.stdout.split()[2]

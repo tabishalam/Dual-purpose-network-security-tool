@@ -1,9 +1,10 @@
 import sys
+import subprocess
 
 from Style import Colors
 from Network_Scanner import Network_Scanner
 from Utils import Terminal, Tools_Management, Interface_Management
-from ARP import ARP_Spoofer, Detector as ARP_Detector, DNS_Spoofer, File_Intercepter
+from ARP import ARP_Spoofer, DNS_Spoofer, File_Intercepter, Detector as ARP_Detector
 
 # # Global variable
 SELECTED_INTERFACE = "" # WiFi interface 
@@ -43,7 +44,8 @@ def mactch_case(option_list, option):
                 DNS_Spoofer.start_spoofing()
 
             case 5:
-                File_Intercepter.run()
+                # File_Intercepter.run()
+                subprocess.run("sudo python ARP/File_Intercepter.py", check=True, shell=True)
 
             case 6:
                 main_option()
@@ -114,5 +116,3 @@ def start_main():
 
 if __name__ == "__main__":
     start_main()
-    # Main = Main()
-    # Main.start_main()

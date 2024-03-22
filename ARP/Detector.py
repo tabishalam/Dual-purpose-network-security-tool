@@ -1,5 +1,7 @@
 import scapy.all as scapy
 
+print("Detector executing...")
+
 # Gets MAC address from ip address
 def get_mac(ip):
     try:
